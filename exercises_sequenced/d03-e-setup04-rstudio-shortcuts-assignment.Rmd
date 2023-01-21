@@ -9,56 +9,64 @@ reading: 5
 
 # Setup: RStudio Shortcuts
 
-*Purpose*: Your ability to get stuff done is highly dependent on your fluency
-with your tools. One aspect of fluency is knowing and *using* keyboard
-shortcuts. In this exercise, we'll go over some of the most important ones.
+*Purpose*: Your ability to get stuff done is highly dependent on your
+fluency with your tools. One aspect of fluency is knowing and *using*
+keyboard shortcuts. In this exercise, we'll go over some of the most
+important ones.
 
 *Reading*: [Keyboard
-shortcuts](https://support.rstudio.com/hc/en-us/articles/200711853-Keyboard-Shortcuts); [Code Chunk Options](https://rmarkdown.rstudio.com/lesson-3.html)
-*Note*: Use this reading to look up answers to the questions below. Rather than
-*memorizing* this information, I recommend you download a
+shortcuts](https://support.rstudio.com/hc/en-us/articles/200711853-Keyboard-Shortcuts);
+[Code Chunk Options](https://rmarkdown.rstudio.com/lesson-3.html)
+*Note*: Use this reading to look up answers to the questions below.
+Rather than *memorizing* this information, I recommend you download a
 [cheatsheet](https://rstudio.com/wp-content/uploads/2016/01/rstudio-IDE-cheatsheet.pdf),
-and either print it out or save it in a convenient place on your computer. Get
-used to referencing your cheatsheets while doing data science---practice makes
-perfect!
+and either print it out or save it in a convenient place on your
+computer. Get used to referencing your cheatsheets while doing data
+science---practice makes perfect!
 
 ```{r setup, include=FALSE}
 # knitr options
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-### __q1__ What do the following keyboard shortcuts do?
+### **q1** What do the following keyboard shortcuts do?
 
-* Within the script editor or a chunk
+-   Within the script editor or a chunk
 
-    * `Alt` + `-`
+    -   `Alt` + `-`
 
+        -   Assignment operator
 
-    * `Shift` + `Cmd/Ctrl` + `M`
+    -   `Shift` + `Cmd/Ctrl` + `M`
 
+        -   Pipe operator
 
-    * `Cmd/Ctrl` + `Enter`
+    -   `Cmd/Ctrl` + `Enter`
 
+        -   Run current line/selection
 
-    * `F1` (Note: on a Mac you need to press `fn` + `F1`)
+    -   `F1` (Note: on a Mac you need to press `fn` + `F1`)
 
+        -   Show help for function at cursor
 
-	* `Cmd/Ctrl` + `Shift` + `C`
+    -   `Cmd/Ctrl` + `Shift` + `C`
 
+        -   Comment/uncomment current line
 
+-   Within R Markdown
 
-* Within R Markdown
+    -   `Cmd/Ctrl` + `Alt` + `I`
+        -   Insert chunk
 
-    * `Cmd/Ctrl` + `Alt` + `I`
+-   Within a chunk
 
+    -   `Shift` + `Cmd/Ctrl` + `Enter`
 
-* Within a chunk
+        -   Run chunk
 
-    * `Shift` + `Cmd/Ctrl` + `Enter`
+    -   `Ctrl` + `I` (`Cmd` + `I`)
 
-
-    * `Ctrl` + `I` (`Cmd` + `I`)
-
+        -   Re-indent
 
 Try this below!
 
@@ -66,31 +74,39 @@ Try this below!
 ## Re-indent these lines
 c(
   "foo",
-    "bar",
-      "goo",
-        "gah"
+  "bar",
+  "goo",
+  "gah"
 )
 ```
 
+### **q2** For a chunk, what header option do you use to
 
-### __q2__ For a chunk, what header option do you use to
+-   Run the code, don't display it, but show its results?
 
-* Run the code, don't display it, but show its results?
+    -   `echo = false`
 
+-   Run the code, but don't display it or its results?
 
-* Run the code, but don't display it or its results?
+    -   `include = false`
 
+### **q3** How do stop the code in a chunk from running once it has started?
 
-### __q3__ How do stop the code in a chunk from running once it has started?
+-   `Esc` or `Ctrl + C` ???
 
-
-### __q4__ How do you show the "Document Outline" in RStudio?
+### **q4** How do you show the "Document Outline" in RStudio?
 
 *Hint*: Try googling "rstudio document outline"
 
+-   Outline (horizontal stacked lines) button in the top right of the
+    editor sub-window
 
 <!-- include-exit-ticket -->
+
 # Exit Ticket
+
 <!-- -------------------------------------------------- -->
 
-Once you have completed this exercise, make sure to fill out the **exit ticket survey**, [linked here](https://docs.google.com/forms/d/e/1FAIpQLSeuq2LFIwWcm05e8-JU84A3irdEL7JkXhMq5Xtoalib36LFHw/viewform?usp=pp_url&entry.693978880=e-setup04-rstudio-shortcuts-assignment.Rmd).
+Once you have completed this exercise, make sure to fill out the **exit
+ticket survey**, [linked
+here](https://docs.google.com/forms/d/e/1FAIpQLSeuq2LFIwWcm05e8-JU84A3irdEL7JkXhMq5Xtoalib36LFHw/viewform?usp=pp_url&entry.693978880=e-setup04-rstudio-shortcuts-assignment.Rmd).
