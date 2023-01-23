@@ -10,14 +10,15 @@ reading: 30
 # Vis: Data Visualization Basics
 
 *Purpose*: The most powerful way for us to learn about a dataset is to
-_visualize the data_. Throughout this class we will make extensive use of the
-_grammar of graphics_, a powerful graphical programming _grammar_ that will
-allow us to create just about any graph you can imagine!
+*visualize the data*. Throughout this class we will make extensive use
+of the *grammar of graphics*, a powerful graphical programming *grammar*
+that will allow us to create just about any graph you can imagine!
 
-*Reading*: [Data Visualization Basics](https://rstudio.cloud/learn/primers/1.1). *Note*: In RStudio use `Ctrl + Click` (Mac `Command + Click`) to follow the link.
-*Topics*: `Welcome`, `A code template`, `Aesthetic mappings`.
-*Reading Time*: ~ 30 minutes
-
+*Reading*: [Data Visualization
+Basics](https://rstudio.cloud/learn/primers/1.1). *Note*: In RStudio use
+`Ctrl + Click` (Mac `Command + Click`) to follow the link. *Topics*:
+`Welcome`, `A code template`, `Aesthetic mappings`. *Reading Time*: \~
+30 minutes
 
 ```{r setup, include=FALSE}
 library(tidyverse)
@@ -25,59 +26,77 @@ library(tidyverse)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-### __q1__ Inspect the `diamonds` dataset. What do the `cut`, `color`, and `clarity` variables mean?
+### **q1** Inspect the `diamonds` dataset. What do the `cut`, `color`, and `clarity` variables mean?
 
 *Hint*: We learned how to inspect a dataset in `e-data-00-basics`!
 
 ```{r q1-task, eval=FALSE}
+?diamonds
 ```
 
-### __q2__ Use your "standard checks" to determine what variables the dataset has.
+-   cut = quality of cut
+-   color = quality of color
+-   clarity = how clear is the diamond
 
+### **q2** Use your "standard checks" to determine what variables the dataset has.
 
-Now that we have the list of variables in the dataset, we know what we can visualize!
+Now that we have the list of variables in the dataset, we know what we
+can visualize!
 
-### __q3__ Using `ggplot`, visualize `price` vs `carat` with points. What trend do
-you observe?
+### **q3** Using `ggplot`, visualize `price` vs `carat` with points. What trend do you observe?
 
 *Hint*: Usually the language `y` vs `x` refers to the `vertical axis` vs
-`horizontal axis`. This is the opposite order from the way we often specify `x,
-y` pairs. Language is hard!
+`horizontal axis`. This is the opposite order from the way we often
+specify `x, y` pairs. Language is hard!
 
 ```{r q3-task}
 ## TODO: Complete this code
-ggplot(diamonds)
+ggplot(diamonds) + geom_point(mapping = aes(x = carat, y = price))
 ```
 
 **Observations**:
 
-- (Write your observations here!)
+-   There is a distinct positive correlation between price and carat.
+-   The middle carat values seem to greater price variation, likely due
+    to the other quality measures.
 
 ## A note on *aesthetics*
 
-The function `aes()` is short for *aesthetics*. Aesthetics in ggplot are the
-mapping of variables in a dataframe to visual elements in the graph. For
-instance, in the plot above you assigned `carat` to the `x` aesthetic, and
-`price` to the `y` aesthetic. But there are *many more* aesthetics you can set,
-some of which vary based on the `geom_` you are using to visualize. The next
-question will explore this idea more.
+The function `aes()` is short for *aesthetics*. Aesthetics in ggplot are
+the mapping of variables in a dataframe to visual elements in the graph.
+For instance, in the plot above you assigned `carat` to the `x`
+aesthetic, and `price` to the `y` aesthetic. But there are *many more*
+aesthetics you can set, some of which vary based on the `geom_` you are
+using to visualize. The next question will explore this idea more.
 
-### __q4__ Create a new graph to visualize `price`, `carat`, and `cut`
-simultaneously.
+### **q4** Create a new graph to visualize `price`, `carat`, and `cut`simultaneously.
 
-*Hint*: Remember that you can add additional aesthetic mappings in `aes()`. Some options include `size`, `color`, and `shape`.
+*Hint*: Remember that you can add additional aesthetic mappings in
+`aes()`. Some options include `size`, `color`, and `shape`.
 
 ```{r q4-task}
 ## TODO: Complete this code
-ggplot(diamonds)
+ggplot(diamonds) + 
+  geom_point(mapping = aes(
+    x = carat,
+    y = price,
+    color = cut
+  ))
 ```
 
 **Observations**:
 
-- (Write your observations here!)
+-   I notice that this layout of the plot is not the best possible way
+    to visualize this data, but it seems to work pretty well.
+-   I notice that R automatically interpreted the data type of `cut`
+    properly into a color scale.
 
 <!-- include-exit-ticket -->
+
 # Exit Ticket
+
 <!-- -------------------------------------------------- -->
 
-Once you have completed this exercise, make sure to fill out the **exit ticket survey**, [linked here](https://docs.google.com/forms/d/e/1FAIpQLSeuq2LFIwWcm05e8-JU84A3irdEL7JkXhMq5Xtoalib36LFHw/viewform?usp=pp_url&entry.693978880=e-vis00-basics-assignment.Rmd).
+Once you have completed this exercise, make sure to fill out the **exit
+ticket survey**, [linked
+here](https://docs.google.com/forms/d/e/1FAIpQLSeuq2LFIwWcm05e8-JU84A3irdEL7JkXhMq5Xtoalib36LFHw/viewform?usp=pp_url&entry.693978880=e-vis00-basics-assignment.Rmd).
