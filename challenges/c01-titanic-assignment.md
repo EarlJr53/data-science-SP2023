@@ -243,13 +243,11 @@ df_prop %>%
 - Is there anything *fishy* going on in your plot?
   - At first glance, I notice that the 1st-3rd class numbers do not line
     up with what I would expect, especially the 100% survival rate in
-    1st and 2nd class. This indicates that the plot is only taking into
-    account for these bars. This is because I did not combine the `n`
-    values (and by extension `Prop` values) for the children and adults
-    who otherwise would be the same category.
-  - Even with this observation, the `Crew` category should be blank,
-    which means the plot is actually taking the adult data for the
-    `Crew` bars, since the child crew data is `NaN`.
+    1st and 2nd class. This indicates that the plot is likely drawing
+    both data-points on top of each other, with the bigger value masking
+    the smaller value. This is because I did not combine the `n` values
+    (and by extension `Prop` values) for the children and adults who
+    otherwise would be the same category.
 
 ### **q5** Create a plot showing the group-proportion of occupants who *did* survive, along with aesthetics for `Class`, `Sex`, *and* `Age`. Document your observations below.
 
