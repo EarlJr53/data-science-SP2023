@@ -115,10 +115,11 @@ df_titanic %>%
 -   In my process, I noticed that I had to spend some time figuring out
     how to combine the "child" and "adult" rows for each category, so
     that the plot would be complete.
--   I also notice that the lower the class, the more surviving women,
-    and the higher the class, the more surviving men. I want to look at
-    the data for all the souls on board to see if this is significant or
-    just the breakdown of the passengers.
+-   I also notice that the higher the class, the more surviving women,
+    and the lower the class, the more surviving men (2nd class
+    notwithstanding). I want to look at the data for all the souls on
+    board to see if this is significant or just the breakdown of the
+    passengers.
 
 # Deeper Look
 
