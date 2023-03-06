@@ -1,0 +1,46 @@
+```{r}
+library(tidyverse)
+library(gapminder)
+```
+
+```{r}
+gapminder %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp)) +
+  geom_point(mapping = aes(color = year)) 
+  geom_point(
+    data = . %>% filter(country == "Rwanda"),
+    mapping = aes(
+      color = year,
+      size = country
+    )
+  )
+```
+
+```{r}
+# gapminder %>%
+#   filter(country == "Rwanda") %>%
+#   pivot_longer(
+#     cols = c(lifeExp, pop),
+#     names_to = "variable",
+#     values_to = "value"
+#   ) %>%
+#   ggplot(aes(x = year)) +
+#   geom_line(mapping = aes(
+#     y = value
+#   )) +
+#   facet_wrap(vars(variable), scale = "free")
+
+coef <- 0.000008
+
+gapminder %>%
+  filter(country == "Rwanda") %>%
+  ggplot(aes(x = year)) +
+  geom_line(aes(y = pop)) +
+  geom_line(aes(y = lifeExp/coef, color = "red")) +
+  scale_y_continuous(
+    name = "Population (black)",
+    
+    sec.axis = sec_axis( trans = ~.*coef, name = "Life Expectancy (years, red)")
+  )
+```
+
