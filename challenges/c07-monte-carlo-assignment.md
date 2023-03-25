@@ -1,19 +1,45 @@
----
-title: "Estimating Pi With a Shotgun"
-author: "Brooke Moss"
-date: 2023-03-25
-output:
-  github_document:
-    toc: true
-prerequisites:
-  - e-stat06-clt
----
+Estimating Pi With a Shotgun
+================
+Brooke Moss
+2023-03-25
+
+- <a href="#grading-rubric" id="toc-grading-rubric">Grading Rubric</a>
+  - <a href="#individual" id="toc-individual">Individual</a>
+  - <a href="#due-date" id="toc-due-date">Due Date</a>
+- <a href="#monte-carlo" id="toc-monte-carlo">Monte Carlo</a>
+  - <a href="#theory" id="toc-theory">Theory</a>
+  - <a href="#implementation" id="toc-implementation">Implementation</a>
+    - <a
+      href="#q1-pick-a-sample-size-n-and-generate-n-points-uniform-randomly-in-the-square-x-in-0-1-and-y-in-0-1-create-a-column-stat-whose-mean-will-converge-to-pi"
+      id="toc-q1-pick-a-sample-size-n-and-generate-n-points-uniform-randomly-in-the-square-x-in-0-1-and-y-in-0-1-create-a-column-stat-whose-mean-will-converge-to-pi"><strong>q1</strong>
+      Pick a sample size <span class="math inline"><em>n</em></span> and
+      generate <span class="math inline"><em>n</em></span> points <em>uniform
+      randomly</em> in the square <span
+      class="math inline"><em>x</em> ∈ [0,1]</span> and <span
+      class="math inline"><em>y</em> ∈ [0,1]</span>. Create a column
+      <code>stat</code> whose mean will converge to <span
+      class="math inline"><em>π</em></span>.</a>
+    - <a href="#q2-using-your-data-in-df_q1-estimate-pi"
+      id="toc-q2-using-your-data-in-df_q1-estimate-pi"><strong>q2</strong>
+      Using your data in <code>df_q1</code>, estimate <span
+      class="math inline"><em>π</em></span>.</a>
+- <a href="#quantifying-uncertainty"
+  id="toc-quantifying-uncertainty">Quantifying Uncertainty</a>
+  - <a
+    href="#q3-using-a-clt-approximation-produce-a-confidence-interval-for-your-estimate-of-pi-make-sure-you-specify-your-confidence-level-does-your-interval-include-the-true-value-of-pi-was-your-chosen-sample-size-sufficiently-large-so-as-to-produce-a-trustworthy-answer"
+    id="toc-q3-using-a-clt-approximation-produce-a-confidence-interval-for-your-estimate-of-pi-make-sure-you-specify-your-confidence-level-does-your-interval-include-the-true-value-of-pi-was-your-chosen-sample-size-sufficiently-large-so-as-to-produce-a-trustworthy-answer"><strong>q3</strong>
+    Using a CLT approximation, produce a confidence interval for your
+    estimate of <span class="math inline"><em>π</em></span>. Make sure you
+    specify your confidence level. Does your interval include the true value
+    of <span class="math inline"><em>π</em></span>? Was your chosen sample
+    size sufficiently large so as to produce a trustworthy answer?</a>
+- <a href="#references" id="toc-references">References</a>
 
 *Purpose*: Random sampling is extremely powerful. To build more
-intuition for how we can use random sampling to solve problems, we'll
-tackle what---at first blush---doesn't seem appropriate for a random
+intuition for how we can use random sampling to solve problems, we’ll
+tackle what—at first blush—doesn’t seem appropriate for a random
 approach: estimating fundamental deterministic constants. In this
-challenge you'll work through an example of turning a deterministic
+challenge you’ll work through an example of turning a deterministic
 problem into a random sampling problem, and practice quantifying
 uncertainty in your estimate.
 
@@ -31,12 +57,12 @@ define how you will be graded, both on an individual and team basis.
 <!-- ------------------------- -->
 
 | Category    | Needs Improvement                                                                                                | Satisfactory                                                                                                               |
-|------------------|-----------------------------|-------------------------|
-| Effort      | Some task **q**'s left unattempted                                                                               | All task **q**'s attempted                                                                                                 |
+|-------------|------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|
+| Effort      | Some task **q**’s left unattempted                                                                               | All task **q**’s attempted                                                                                                 |
 | Observed    | Did not document observations, or observations incorrect                                                         | Documented correct observations based on analysis                                                                          |
 | Supported   | Some observations not clearly supported by analysis                                                              | All observations clearly supported by analysis (table, graph, etc.)                                                        |
 | Assessed    | Observations include claims not supported by the data, or reflect a level of certainty not warranted by the data | Observations are appropriately qualified by the quality & relevance of the data and (in)conclusiveness of the support      |
-| Specified   | Uses the phrase "more data are necessary" without clarification                                                  | Any statement that "more data are necessary" specifies which *specific* data are needed to answer what *specific* question |
+| Specified   | Uses the phrase “more data are necessary” without clarification                                                  | Any statement that “more data are necessary” specifies which *specific* data are needed to answer what *specific* question |
 | Code Styled | Violations of the [style guide](https://style.tidyverse.org/) hinder readability                                 | Code sufficiently close to the [style guide](https://style.tidyverse.org/)                                                 |
 
 ## Due Date
@@ -48,14 +74,23 @@ before the day of the class discussion of the challenge. See the
 [Syllabus](https://docs.google.com/document/d/1qeP6DUS8Djq_A0HMllMqsSqX3a9dbcx1/edit?usp=sharing&ouid=110386251748498665069&rtpof=true&sd=true)
 for more information.
 
-```{r setup}
+``` r
 library(tidyverse)
 ```
 
+    ## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
+    ## ✔ ggplot2 3.4.0      ✔ purrr   1.0.1 
+    ## ✔ tibble  3.2.0      ✔ dplyr   1.0.10
+    ## ✔ tidyr   1.2.1      ✔ stringr 1.5.0 
+    ## ✔ readr   2.1.4      ✔ forcats 0.5.2 
+    ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ✖ dplyr::filter() masks stats::filter()
+    ## ✖ dplyr::lag()    masks stats::lag()
+
 *Background*: In 2014, some crazy Quebecois physicists estimated $\pi$
-with a pump-action shotgun[1,2]. Their technique was based on the *Monte
-Carlo method*, a general strategy for turning deterministic problems
-into random sampling.
+with a pump-action shotgun\[1,2\]. Their technique was based on the
+*Monte Carlo method*, a general strategy for turning deterministic
+problems into random sampling.
 
 # Monte Carlo
 
@@ -74,16 +109,16 @@ Award](https://en.wikipedia.org/wiki/Perlin_noise) for developing a
 particular flavor of Monte Carlo for generating artificial textures.
 
 I remember when I first learned about Monte Carlo, I thought the whole
-idea was pretty strange: If I have a deterministic problem, why wouldn't
-I just "do the math" and get the right answer? It turns out "doing the
-math" is often hard---and in some cases an analytic solution is simply
-not possible. Problems that are easy to do by hand can quickly become
+idea was pretty strange: If I have a deterministic problem, why wouldn’t
+I just “do the math” and get the right answer? It turns out “doing the
+math” is often hard—and in some cases an analytic solution is simply not
+possible. Problems that are easy to do by hand can quickly become
 intractable if you make a slight change to the problem formulation.
 Monte Carlo is a *general* approach; so long as you can model your
 problem in terms of random variables, you can apply the Monte Carlo
-method. See Ref. [3] for many more details on using Monte Carlo.
+method. See Ref. \[3\] for many more details on using Monte Carlo.
 
-In this challenge, we'll tackle a deterministic problem (computing
+In this challenge, we’ll tackle a deterministic problem (computing
 $\pi$) with the Monte Carlo method.
 
 ## Theory
@@ -95,7 +130,7 @@ probability estimation problem whose solution is related to $\pi$.
 Consider the following sets: a square with side length one $St$, and a
 quarter-circle $Sc$.
 
-```{r vis-areas}
+``` r
 ## NOTE: No need to edit; this visual helps explain the pi estimation scheme
 tibble(x = seq(0, 1, length.out = 100)) %>%
   mutate(y = sqrt(1 - x^2)) %>%
@@ -125,6 +160,14 @@ tibble(x = seq(0, 1, length.out = 100)) %>%
   coord_fixed()
 ```
 
+    ## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+    ## ℹ Please use `linewidth` instead.
+    ## This warning is displayed once every 8 hours.
+    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+    ## generated.
+
+![](c07-monte-carlo-assignment_files/figure-gfm/vis-areas-1.png)<!-- -->
+
 The area of the set $Sc$ is $\pi/4$, while the area of $St$ is $1$. Thus
 the probability that a *uniform* random variable over the square lands
 inside $Sc$ is the ratio of the areas, that is
@@ -133,7 +176,7 @@ $$\mathbb{P}_{X}[X \in Sc] = (\pi / 4) / 1 = \frac{\pi}{4}.$$
 
 This expression is our ticket to estimating $\pi$ with a source of
 randomness: If we estimate the probability above and multiply by $4$,
-we'll be estimating $\pi$.
+we’ll be estimating $\pi$.
 
 ## Implementation
 
@@ -147,10 +190,10 @@ exercise to generate Monte Carlo data.
 
 *Hint*: Remember that the mean of an *indicator function* on your target
 set will estimate the probability of points landing in that area (see
-`e-stat02-probability`). Based on the expression above, you'll need to
+`e-stat02-probability`). Based on the expression above, you’ll need to
 *modify* that indicator to produce an estimate of $\pi$.
 
-```{r q1-task}
+``` r
 ## TASK: Choose a sample size and generate samples
 n <- 1000 # Choose a sample size
 df_q1 <-
@@ -163,11 +206,13 @@ df_q1 <-
 
 ### **q2** Using your data in `df_q1`, estimate $\pi$.
 
-```{r q2-task}
+``` r
 ## TASK: Estimate pi using your data from q1
 pi_est <- mean(df_q1$stat)
 pi_est
 ```
+
+    ## [1] 3.176
 
 # Quantifying Uncertainty
 
@@ -175,40 +220,41 @@ pi_est
 
 You now have an estimate of $\pi$, but how trustworthy is that estimate?
 In `e-stat06-clt` we discussed *confidence intervals* as a means to
-quantify the uncertainty in an estimate. Now you'll apply that knowledge
+quantify the uncertainty in an estimate. Now you’ll apply that knowledge
 to assess your $\pi$ estimate.
 
 ### **q3** Using a CLT approximation, produce a confidence interval for your estimate of $\pi$. Make sure you specify your confidence level. Does your interval include the true value of $\pi$? Was your chosen sample size sufficiently large so as to produce a trustworthy answer?
 
-```{r q3-task}
+``` r
 lo = mean(df_q1$stat) - qnorm(1 - (1 - 0.95) / 2) * sd(df_q1$stat) / sqrt(n)
 hi = mean(df_q1$stat) + qnorm(1 - (1 - 0.95) / 2) * sd(df_q1$stat) / sqrt(n)
 
 c(lo, hi)
 ```
 
+    ## [1] 3.075684 3.276316
+
 **Observations**:
 
--   Does your interval include the true value of $\pi$?
-    -   Yes, my interval includes the true value of pi.
--   What confidence level did you choose?
-    -   I chose a confidence level of 95%.
--   Was your sample size $n$ large enough? Why do you say that?
-    -   I believe my sample size *n* = 1000 is a reasonable value,
-        although my confidence interval could be much tighter and still
-        include the actual value of pi. I had originally used a sample
-        size of *n* = 100, which made the confidence interval very
-        large.
+- Does your interval include the true value of $\pi$?
+  - Yes, my interval includes the true value of pi.
+- What confidence level did you choose?
+  - I chose a confidence level of 95%.
+- Was your sample size $n$ large enough? Why do you say that?
+  - I believe my sample size *n* = 1000 is a reasonable value, although
+    my confidence interval could be much tighter and still include the
+    actual value of pi. I had originally used a sample size of *n* =
+    100, which made the confidence interval very large.
 
 # References
 
 <!-- -------------------------------------------------- -->
 
-[1] Dumoulin and Thouin, "A Ballistic Monte Carlo Approximation of Pi"
+\[1\] Dumoulin and Thouin, “A Ballistic Monte Carlo Approximation of Pi”
 (2014) ArXiv, [link](https://arxiv.org/abs/1404.1499)
 
-[2] "How Mathematicians Used A Pump-Action Shotgun to Estimate Pi",
+\[2\] “How Mathematicians Used A Pump-Action Shotgun to Estimate Pi”,
 [link](https://medium.com/the-physics-arxiv-blog/how-mathematicians-used-a-pump-action-shotgun-to-estimate-pi-c1eb776193ef)
 
-[3] Art Owen "Monte Carlo",
+\[3\] Art Owen “Monte Carlo”,
 [link](https://statweb.stanford.edu/~owen/mc/)
