@@ -88,9 +88,9 @@ library(tidyverse)
 
     ## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
     ## ✔ ggplot2 3.4.0      ✔ purrr   1.0.1 
-    ## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
+    ## ✔ tibble  3.2.0      ✔ dplyr   1.0.10
     ## ✔ tidyr   1.2.1      ✔ stringr 1.5.0 
-    ## ✔ readr   2.1.3      ✔ forcats 0.5.2 
+    ## ✔ readr   2.1.4      ✔ forcats 0.5.2 
     ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
     ## ✖ dplyr::filter() masks stats::filter()
     ## ✖ dplyr::lag()    masks stats::lag()
@@ -173,8 +173,14 @@ summary(gapminder)
 
 ``` r
 ## TASK: Find the largest and smallest values of `year` in `gapminder`
-year_max <- max(pull(gapminder, year))
-year_min <- min(pull(gapminder, year))
+year_max <-
+  gapminder %>%
+  pull(year) %>%
+  max()
+year_min <-
+  gapminder %>%
+  pull(year) %>%
+  min()
 ```
 
 Use the following test to check your work.
@@ -231,7 +237,8 @@ gapminder %>%
   geom_boxplot(mapping = aes(
     x = continent,
     y = gdpPercap,
-  )) +  coord_cartesian(ylim = c(0, 20000))
+  )) +
+  scale_y_log10()
 ```
 
 ![](c04-gapminder-assignment_files/figure-gfm/q2-task-1.png)<!-- -->
@@ -266,6 +273,8 @@ gapminder %>%
 
 - One data point within the Asian continent is astronomically higher
   than all of the other datapoints, I wonder which country that is.
+- Oceania has a very compressed set of points, which likely points to
+  only a few countries being included.
 
 **Difficulties & Approaches**:
 
@@ -274,8 +283,8 @@ gapminder %>%
 - Taking the boxplot instead of the violin gives a somewhat better view
   of the data, but the outlier still makes the rest of the plot
   difficult to understand.
-- By utilizing `coord_cartesian` to limit the y axis, I cut out the one
-  extreme outlier and the rest of the data looks much more reasonable.
+- By utilizing `scale_y_log10` to put the y axis on a log scale, the one
+  extreme outlier no longer makes the rest of the plot unreadable.
 
 ### **q3** You should have found *at least* three outliers in q2 (but possibly many more!). Identify those outliers (figure out which countries they are).
 
@@ -437,7 +446,10 @@ gapminder %>%
   see life expectancy increases from the wealth.
 - In addition, I see that the coloration by year shows a stark increase
   in life expectancy overall as time goes on. Almost all of the
-  high-life expectancy points are from recent years.
+  high-life expectancy points are from recent years. However, as there
+  is a large amount of overplotting on this figure, I can’t reliably
+  make this distinction without also creating a timeseries or other more
+  focused plot.
 - I do notice one point at the very bottom left of the plot that is very
   recent and wonder what country it might be and whether its decline
   relates to some world events.

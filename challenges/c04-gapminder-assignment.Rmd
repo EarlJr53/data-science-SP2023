@@ -29,7 +29,7 @@ define how you will be graded, both on an individual and team basis.
 <!-- ------------------------- -->
 
 | Category    | Needs Improvement                                                                                                | Satisfactory                                                                                                               |
-|--------------|----------------------------|-------------------------------|
+|-----------------|--------------------------|-----------------------------|
 | Effort      | Some task **q**'s left unattempted                                                                               | All task **q**'s attempted                                                                                                 |
 | Observed    | Did not document observations, or observations incorrect                                                         | Documented correct observations based on analysis                                                                          |
 | Supported   | Some observations not clearly supported by analysis                                                              | All observations clearly supported by analysis (table, graph, etc.)                                                        |
@@ -91,8 +91,14 @@ summary(gapminder)
 
 ```{r q1-task}
 ## TASK: Find the largest and smallest values of `year` in `gapminder`
-year_max <- max(pull(gapminder, year))
-year_min <- min(pull(gapminder, year))
+year_max <-
+  gapminder %>%
+  pull(year) %>%
+  max()
+year_min <-
+  gapminder %>%
+  pull(year) %>%
+  min()
 ```
 
 Use the following test to check your work.
@@ -128,7 +134,8 @@ gapminder %>%
   geom_boxplot(mapping = aes(
     x = continent,
     y = gdpPercap,
-  )) +  coord_cartesian(ylim = c(0, 20000))
+  )) +
+  scale_y_log10()
 
 # Second Try
 gapminder %>%
@@ -153,6 +160,8 @@ gapminder %>%
 
 -   One data point within the Asian continent is astronomically higher
     than all of the other datapoints, I wonder which country that is.
+-   Oceania has a very compressed set of points, which likely points to
+    only a few countries being included.
 
 **Difficulties & Approaches**:
 
@@ -161,9 +170,8 @@ gapminder %>%
 -   Taking the boxplot instead of the violin gives a somewhat better
     view of the data, but the outlier still makes the rest of the plot
     difficult to understand.
--   By utilizing `coord_cartesian` to limit the y axis, I cut out the
-    one extreme outlier and the rest of the data looks much more
-    reasonable.
+-   By utilizing `scale_y_log10` to put the y axis on a log scale, the
+    one extreme outlier no longer makes the rest of the plot unreadable.
 
 ### **q3** You should have found *at least* three outliers in q2 (but possibly many more!). Identify those outliers (figure out which countries they are).
 
@@ -287,7 +295,10 @@ gapminder %>%
     see life expectancy increases from the wealth.
 -   In addition, I see that the coloration by year shows a stark
     increase in life expectancy overall as time goes on. Almost all of
-    the high-life expectancy points are from recent years.
+    the high-life expectancy points are from recent years. However, as
+    there is a large amount of overplotting on this figure, I can't
+    reliably make this distinction without also creating a timeseries or
+    other more focused plot.
 -   I do notice one point at the very bottom left of the plot that is
     very recent and wonder what country it might be and whether its
     decline relates to some world events.
