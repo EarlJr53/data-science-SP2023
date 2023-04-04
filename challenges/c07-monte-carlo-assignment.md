@@ -200,7 +200,7 @@ df_q1 <-
   tibble(
     x = runif(n = n, min = 0, max = 1),
     y = runif(n = n, min = 0, max = 1),
-    stat = 4 * (0 + (sqrt(x^2 + y^2) < 1))
+    stat = 4 * (sqrt(x^2 + y^2) < 1)
   )
 ```
 
@@ -212,7 +212,7 @@ pi_est <- mean(df_q1$stat)
 pi_est
 ```
 
-    ## [1] 3.176
+    ## [1] 3.088
 
 # Quantifying Uncertainty
 
@@ -226,13 +226,17 @@ to assess your $\pi$ estimate.
 ### **q3** Using a CLT approximation, produce a confidence interval for your estimate of $\pi$. Make sure you specify your confidence level. Does your interval include the true value of $\pi$? Was your chosen sample size sufficiently large so as to produce a trustworthy answer?
 
 ``` r
-lo = mean(df_q1$stat) - qnorm(1 - (1 - 0.95) / 2) * sd(df_q1$stat) / sqrt(n)
-hi = mean(df_q1$stat) + qnorm(1 - (1 - 0.95) / 2) * sd(df_q1$stat) / sqrt(n)
-
-c(lo, hi)
+df_q1 %>%
+  summarize(
+    lo = mean(stat) - qnorm(1 - (1 - 0.95) / 2) * sd(stat) / sqrt(n),
+    hi = mean(stat) + qnorm(1 - (1 - 0.95) / 2) * sd(stat) / sqrt(n)
+  )
 ```
 
-    ## [1] 3.075684 3.276316
+    ## # A tibble: 1 × 2
+    ##      lo    hi
+    ##   <dbl> <dbl>
+    ## 1  2.98  3.19
 
 **Observations**:
 
