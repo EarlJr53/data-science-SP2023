@@ -501,15 +501,19 @@ df_data %>%
 **Observations**:
 
 - Document your observations here.
-  - 6-person families seem to have the greatest variance and 2-person
-    families the least, nearly across the board.
+  - 6-person families seem to have the widest confidence intervals and
+    2-person families the most narrow, nearly across the board. This
+    could be caused by underlying variance or a small sample size.
+    Intuitively, I believe that there is likely a much smaller sample
+    size for 6-person families than 2-person families.
   - The median income appears to increase with the number of people in
     the household, although not in all cases.
 - Can you confidently distinguish between household incomes in Suffolk
   county? Why or why not?
   - No, I cannot confidently distinguish between household incomes in
-    Suffolk county, because all of the household sizes in Suffolk have
-    very similar median incomes and ranges of incomes.
+    Suffolk county, because the confidence intervals of the various
+    household sizes overlap, making the medians statistically
+    indistinguishable.
 - Which counties have the widest confidence intervals?
   - Nantucket and Dukes counties, the two wealthiest in the state, have
     the widest confidence intervals.
@@ -552,7 +556,8 @@ df_data %>%
   this trend exist?
   - I see the trend that the larger the population of the county, the
     lower the Standard Error. This is likely because larger populations
-    provide more and more data-points, bringing estimates and
+    provide more and more data-points (assuming the sample is
+    proportional to the population size), bringing estimates and
     calculations closer to the true value.
 - What does this *overall* trend tell you about the relative ease of
   studying small vs large counties?
