@@ -500,16 +500,16 @@ rsquare(fit_q6, df_validate)
 
 df_intervals_q6 <-
   df_train %>%
-  add_uncertainties(fit_q6, interval = "confidence", prefix = "ci") %>%
-  add_uncertainties(fit_q6, interval = "prediction", prefix = "pi")
+  add_uncertainties(fit_q6, interval = "confidence", prefix = "ci", level = 0.8) %>%
+  add_uncertainties(fit_q6, interval = "prediction", prefix = "pi", level = 0.8)
 
 df_design %>% 
-  add_uncertainties(fit_q6, interval = "prediction", prefix = "pi")
+  add_uncertainties(fit_q6, interval = "prediction", prefix = "pi", level = 0.8)
 ```
 
 ```{r q6-validation}
 df_validate %>%
-  add_uncertainties(fit_q6, interval = "prediction", prefix = "pi") %>% 
+  add_uncertainties(fit_q6, interval = "prediction", prefix = "pi", level = 0.8) %>% 
   select(T_norm, pi_lwr, pi_fit, pi_upr) %>% 
   mutate(in_interval = (T_norm <= pi_upr) & (T_norm >= pi_lwr)) %>% 
   group_by(in_interval) %>% 
@@ -518,10 +518,9 @@ df_validate %>%
 
 bind_rows(
   df_validate %>% 
-    add_uncertainties(fit_q6, interval = "prediction", prefix = "pi") %>% 
+    add_uncertainties(fit_q6, interval = "prediction", prefix = "pi", level = 0.8) %>% 
     select(T_norm, pi_lwr, pi_fit, pi_upr) %>% 
     mutate(in_interval = (T_norm <= pi_upr) & (T_norm >= pi_lwr))
-    # mutate(model = "q6"),
 ) %>% 
   
   ggplot(aes(T_norm, pi_fit)) +
@@ -531,8 +530,6 @@ bind_rows(
     width = 0
   ) +
   geom_point() +
-  # 
-  # facet_grid(~ model, labeller = label_both) +
   theme_minimal() +
   labs(
     title = "Predicted vs Actual",
@@ -557,12 +554,14 @@ bind_rows(
         CI wouldn't be up to the task here.
 -   What fraction of validation cases lie within the interval you
     predict? How does this compare with `pr_level`?
-    -   58 of 60 validation cases lie within the interval I predicted,
-        which is 0.967, greater than the `pr_level` of 0.8.
+    -   57 of 60 validation cases lie within the interval I predicted,
+        which is 0.95, greater than the `pr_level` of 0.8.
+    -   Even when aiming for the `pr_level` of 0.8, I notice that it is
+        difficult to hit that number.
 -   What interval for `T_norm` would you recommend the design team to
     plan around?
     -   I would recommend the design team plan around an interval of
-        `[0.9289679, 2.917802]` for `T_norm` .
+        `[1.2788, 2.5679]` for `T_norm` .
 -   Are there any other recommendations you would provide?
     -   I would recommend that the client potentially change some of
         their controlled variables, as with their current set there is

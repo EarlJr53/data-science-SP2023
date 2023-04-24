@@ -713,21 +713,21 @@ rsquare(fit_q6, df_validate)
 ``` r
 df_intervals_q6 <-
   df_train %>%
-  add_uncertainties(fit_q6, interval = "confidence", prefix = "ci") %>%
-  add_uncertainties(fit_q6, interval = "prediction", prefix = "pi")
+  add_uncertainties(fit_q6, interval = "confidence", prefix = "ci", level = 0.8) %>%
+  add_uncertainties(fit_q6, interval = "prediction", prefix = "pi", level = 0.8)
 
 df_design %>% 
-  add_uncertainties(fit_q6, interval = "prediction", prefix = "pi")
+  add_uncertainties(fit_q6, interval = "prediction", prefix = "pi", level = 0.8)
 ```
 
     ## # A tibble: 1 × 7
     ##       x     L     W   U_0 pi_fit pi_lwr pi_upr
     ##   <dbl> <dbl> <dbl> <dbl>  <dbl>  <dbl>  <dbl>
-    ## 1     1   0.2  0.04     1   1.92  0.929   2.92
+    ## 1     1   0.2  0.04     1   1.92   1.28   2.57
 
 ``` r
 df_validate %>%
-  add_uncertainties(fit_q6, interval = "prediction", prefix = "pi") %>% 
+  add_uncertainties(fit_q6, interval = "prediction", prefix = "pi", level = 0.8) %>% 
   select(T_norm, pi_lwr, pi_fit, pi_upr) %>% 
   mutate(in_interval = (T_norm <= pi_upr) & (T_norm >= pi_lwr)) %>% 
   group_by(in_interval) %>% 
@@ -738,16 +738,15 @@ df_validate %>%
     ## # Groups:   in_interval [2]
     ##   in_interval     n
     ##   <lgl>       <int>
-    ## 1 FALSE           2
-    ## 2 TRUE           58
+    ## 1 FALSE           3
+    ## 2 TRUE           57
 
 ``` r
 bind_rows(
   df_validate %>% 
-    add_uncertainties(fit_q6, interval = "prediction", prefix = "pi") %>% 
+    add_uncertainties(fit_q6, interval = "prediction", prefix = "pi", level = 0.8) %>% 
     select(T_norm, pi_lwr, pi_fit, pi_upr) %>% 
     mutate(in_interval = (T_norm <= pi_upr) & (T_norm >= pi_lwr))
-    # mutate(model = "q6"),
 ) %>% 
   
   ggplot(aes(T_norm, pi_fit)) +
@@ -757,8 +756,6 @@ bind_rows(
     width = 0
   ) +
   geom_point() +
-  # 
-  # facet_grid(~ model, labeller = label_both) +
   theme_minimal() +
   labs(
     title = "Predicted vs Actual",
@@ -785,12 +782,14 @@ bind_rows(
     task here.
 - What fraction of validation cases lie within the interval you predict?
   How does this compare with `pr_level`?
-  - 58 of 60 validation cases lie within the interval I predicted, which
-    is 0.967, greater than the `pr_level` of 0.8.
+  - 57 of 60 validation cases lie within the interval I predicted, which
+    is 0.95, greater than the `pr_level` of 0.8.
+  - Even when aiming for the `pr_level` of 0.8, I notice that it is
+    difficult to hit that number.
 - What interval for `T_norm` would you recommend the design team to plan
   around?
   - I would recommend the design team plan around an interval of
-    `[0.9289679, 2.917802]` for `T_norm` .
+    `[1.2788, 2.5679]` for `T_norm` .
 - Are there any other recommendations you would provide?
   - I would recommend that the client potentially change some of their
     controlled variables, as with their current set there is room for a
