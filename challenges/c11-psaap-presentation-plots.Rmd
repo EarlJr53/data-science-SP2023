@@ -1,0 +1,71 @@
+```{r setup}
+library(tidyverse)
+library(modelr)
+library(broom)
+
+## Helper function to compute uncertainty bounds
+add_uncertainties <- function(data, model, prefix = "pred", ...) {
+  df_fit <-
+    stats::predict(model, data, ...) %>%
+    as_tibble() %>%
+    rename_with(~ str_c(prefix, "_", .))
+
+  bind_cols(data, df_fit)
+}
+```
+
+```{r data-download-unzip}
+## NOTE: No need to edit this chunk
+## Download PSAAP II data and unzip
+url_zip <- "https://ndownloader.figshare.com/files/24111269"
+filename_zip <- "./data/psaap.zip"
+filename_psaap <- "./data/psaap.csv"
+
+curl::curl_download(url_zip, destfile = filename_zip)
+unzip(filename_zip, exdir = "./data")
+df_psaap <- read_csv(filename_psaap)
+
+df_train <- df_psaap %>% filter(idx %in% 1:20)
+df_validate <- df_psaap %>% filter(idx %in% 21:36)
+```
+
+```{r}
+fit_q4 <- 
+  df_train %>% 
+  lm(formula = T_norm ~ (x * L * W) + T_f + rho_f + U_0 + C_fp)
+
+fit_q6 <-
+  df_train %>% 
+  lm(formula = T_norm ~ x * L * W * U_0)
+```
+
+```{r}
+bind_rows(
+  df_validate %>% 
+    add_uncertainties(fit_q4, interval = "prediction", prefix = "pi") %>% 
+    select(T_norm, pi_lwr, pi_fit, pi_upr) %>% 
+    mutate(in_interval = (T_norm <= pi_upr) & (T_norm >= pi_lwr)) %>% 
+    mutate(model = "(x * L * W) + T_f + rho_f + U_0 + C_fp"),
+  df_validate %>% 
+    add_uncertainties(fit_q6, interval = "prediction", prefix = "pi") %>% 
+    select(T_norm, pi_lwr, pi_fit, pi_upr) %>% 
+    mutate(in_interval = (T_norm <= pi_upr) & (T_norm >= pi_lwr)) %>% 
+    mutate(model = "x * L * W * U_0"),
+) %>% 
+  
+  ggplot(aes(T_norm, pi_fit)) +
+  geom_abline(slope = 1, intercept = 0, color = "grey80", size = 2) +
+  geom_errorbar(
+    aes(ymin = pi_lwr, ymax = pi_upr, color = in_interval),
+    width = 0
+  ) +
+  geom_point() +
+  
+  facet_grid(~ model, labeller = label_both) +
+  theme_minimal() +
+  labs(
+    title = "Predicted vs Actual",
+    x = "Actual T_norm",
+    y = "Predicted T_norm"
+  )
+```
