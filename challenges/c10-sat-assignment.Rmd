@@ -49,7 +49,7 @@ define how you will be graded, both on an individual and team basis.
 <!-- ------------------------- -->
 
 | Category    | Needs Improvement                                                                                                | Satisfactory                                                                                                               |
-|--------------|----------------------------|-------------------------------|
+|-----------------|--------------------------|-----------------------------|
 | Effort      | Some task **q**'s left unattempted                                                                               | All task **q**'s attempted                                                                                                 |
 | Observed    | Did not document observations, or observations incorrect                                                         | Documented correct observations based on analysis                                                                          |
 | Supported   | Some observations not clearly supported by analysis                                                              | All observations clearly supported by analysis (table, graph, etc.)                                                        |
@@ -284,12 +284,17 @@ variables `x` and `y`. You may find this more helpful than the
 
 ```{r q5-task}
 ## TODO: Complete the following helper function to do a bootstrap analysis
-corr_high_GPA <- function(split) {
-  tibble(
-    term = "cor",
-    estimate = cor(df_composite$high_GPA, df_composite$univ_GPA)
-  )
-}
+# corr_high_GPA <- function(split) {
+#   tibble(
+#     term = "cor",
+#     estimate = cor(df_composite$high_GPA, df_composite$univ_GPA)
+#   )
+# }
+
+corr_high_GPA <- function(split) { 
+  tibble( 
+    term = "cor", 
+    estimate = cor( analysis(split) %>% pull(high_GPA), analysis(split) %>% pull(univ_GPA) ) ) } 
 ## Use the bootstrap to approximate a CI
 df_composite %>%
   bootstraps(times = 1000) %>%
@@ -302,9 +307,9 @@ df_composite %>%
 -   How does your estimate from q5 compare with your estimate from q4?
     -   My estimate here is identical to the above estimate.
 -   How does your CI from q5 compare with your CI from q4?
-    -   In q4, my confidence interval was .15 wide, whereas in q5 it is
-        nonexistent, with the lower and upper bounds both being
-        identical to the estimate.
+    -   In q4, my confidence interval was .153 wide, whereas in q5 it is
+        .15 wide, which is almost identical, but slightly narrower. The
+        CI values themselves are also almost identical.
 
 *Aside*: When you use two different approximations to compute the same
 quantity and get similar results, that's an *encouraging sign*. Such an
