@@ -93,9 +93,9 @@ library(tidyverse)
 
     ## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
     ## ✔ ggplot2 3.4.0      ✔ purrr   1.0.1 
-    ## ✔ tibble  3.2.0      ✔ dplyr   1.0.10
+    ## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
     ## ✔ tidyr   1.2.1      ✔ stringr 1.5.0 
-    ## ✔ readr   2.1.4      ✔ forcats 0.5.2 
+    ## ✔ readr   2.1.3      ✔ forcats 0.5.2 
     ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
     ## ✖ dplyr::filter() masks stats::filter()
     ## ✖ dplyr::lag()    masks stats::lag()
@@ -117,6 +117,8 @@ library(modelr)
 library(rsample)
 library(correlation)
 ```
+
+    ## Warning: package 'correlation' was built under R version 4.2.3
 
 <!-- include-rubric -->
 
@@ -401,12 +403,17 @@ variables `x` and `y`. You may find this more helpful than the
 
 ``` r
 ## TODO: Complete the following helper function to do a bootstrap analysis
-corr_high_GPA <- function(split) {
-  tibble(
-    term = "cor",
-    estimate = cor(df_composite$high_GPA, df_composite$univ_GPA)
-  )
-}
+# corr_high_GPA <- function(split) {
+#   tibble(
+#     term = "cor",
+#     estimate = cor(df_composite$high_GPA, df_composite$univ_GPA)
+#   )
+# }
+
+corr_high_GPA <- function(split) { 
+  tibble( 
+    term = "cor", 
+    estimate = cor( analysis(split) %>% pull(high_GPA), analysis(split) %>% pull(univ_GPA) ) ) } 
 ## Use the bootstrap to approximate a CI
 df_composite %>%
   bootstraps(times = 1000) %>%
@@ -417,16 +424,16 @@ df_composite %>%
     ## # A tibble: 1 × 6
     ##   term  .lower .estimate .upper .alpha .method   
     ##   <chr>  <dbl>     <dbl>  <dbl>  <dbl> <chr>     
-    ## 1 cor    0.780     0.780  0.780   0.05 percentile
+    ## 1 cor    0.700     0.778  0.847   0.05 percentile
 
 **Observations**:
 
 - How does your estimate from q5 compare with your estimate from q4?
   - My estimate here is identical to the above estimate.
 - How does your CI from q5 compare with your CI from q4?
-  - In q4, my confidence interval was .15 wide, whereas in q5 it is
-    nonexistent, with the lower and upper bounds both being identical to
-    the estimate.
+  - In q4, my confidence interval was .153 wide, whereas in q5 it is .15
+    wide, which is almost identical, but slightly narrower. The CI
+    values themselves are also almost identical.
 
 *Aside*: When you use two different approximations to compute the same
 quantity and get similar results, that’s an *encouraging sign*. Such an
