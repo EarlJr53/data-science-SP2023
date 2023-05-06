@@ -27,7 +27,7 @@ define how you will be graded, both on an individual and team basis.
 <!-- ------------------------- -->
 
 | Category    | Needs Improvement                                                                                                | Satisfactory                                                                                                               |
-|--------------|----------------------------|-------------------------------|
+|-----------------|--------------------------|-----------------------------|
 | Effort      | Some task **q**'s left unattempted                                                                               | All task **q**'s attempted                                                                                                 |
 | Observed    | Did not document observations, or observations incorrect                                                         | Documented correct observations based on analysis                                                                          |
 | Supported   | Some observations not clearly supported by analysis                                                              | All observations clearly supported by analysis (table, graph, etc.)                                                        |
@@ -79,6 +79,30 @@ colnames(df_data)
 glimpse(df_data)
 summary(df_data)
 ```
+
+Observations:
+
+-   variables about subject:
+    -   subject_age
+    -   subject_race
+    -   subject_sex
+    -   race_Raw??
+-   variables about vehicle:
+    -   vehicle_type
+    -   vehicle_registration_status
+-   simple stop info:
+    -   date
+    -   location
+    -   county_name
+    -   type
+-   stop detail categories:
+    -   arrest/citation/warning
+    -   contraband
+    -   frisk/search
+    -   reason for stop
+    -   outcome
+-   Exploration could include relationship between variables in
+    different categories, such as subject demographics and stop details.
 
 Note that we have both a `subject_race` and `race_Raw` column. There are
 a few possibilities as to what `race_Raw` represents:
@@ -367,6 +391,13 @@ fit_q8 <-
     family = "binomial"
   )
 
+fit_q8 %>% 
+  tidy() %>% 
+  mutate(
+    CI_low = estimate - 2.6 * std.error,
+    CI_high = estimate + 2.6 * std.error
+  )
+
 fit_q8 %>% tidy()
 ```
 
@@ -375,8 +406,12 @@ fit_q8 %>% tidy()
 -   How does controlling for found contraband affect the `subject_race`
     terms in the model?
     -   When there is *not* contraband found, Hispanic subjects are
-        still the most likely to be arrested, but black subjects are
-        less likely than white subjects.
+        still the most likely to be arrested, but black subjects appear
+        to be less likely than white subjects. However, when calculating
+        a 99% confidence interval for black subjects, the CI does
+        intersect zero, implying that this observation is not
+        significant. The CI for hispanic subject is still significant,
+        however.
 -   What does the *finding of contraband* tell us about the stop? What
     does it *not* tell us about the stop?
     -   The finding of contraband tells us that the officer decided to

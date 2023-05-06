@@ -254,6 +254,30 @@ summary(df_data)
     ##  (Other): 109857                              
     ##  NA's   :   9814
 
+Observations:
+
+- variables about subject:
+  - subject_age
+  - subject_race
+  - subject_sex
+  - race_Raw??
+- variables about vehicle:
+  - vehicle_type
+  - vehicle_registration_status
+- simple stop info:
+  - date
+  - location
+  - county_name
+  - type
+- stop detail categories:
+  - arrest/citation/warning
+  - contraband
+  - frisk/search
+  - reason for stop
+  - outcome
+- Exploration could include relationship between variables in different
+  categories, such as subject demographics and stop details.
+
 Note that we have both a `subject_race` and `race_Raw` column. There are
 a few possibilities as to what `race_Raw` represents:
 
@@ -594,6 +618,25 @@ fit_q8 <-
     family = "binomial"
   )
 
+fit_q8 %>% 
+  tidy() %>% 
+  mutate(
+    CI_low = estimate - 2.6 * std.error,
+    CI_high = estimate + 2.6 * std.error
+  )
+```
+
+    ## # A tibble: 6 × 7
+    ##   term                 estimate std.error statistic   p.value  CI_low CI_high
+    ##   <chr>                   <dbl>     <dbl>     <dbl>     <dbl>   <dbl>   <dbl>
+    ## 1 (Intercept)           -1.72    0.0339      -50.8  0         -1.81   -1.63  
+    ## 2 contraband_foundTRUE   0.609   0.0192       31.7  4.29e-221  0.559   0.659 
+    ## 3 subject_age            0.0225  0.000866     26.0  2.19e-149  0.0203  0.0248
+    ## 4 subject_raceblack     -0.0511  0.0270       -1.90 5.80e-  2 -0.121   0.0190
+    ## 5 subject_racehispanic   0.221   0.0237        9.31 1.32e- 20  0.159   0.282 
+    ## 6 subject_sexfemale     -0.306   0.0257      -11.9  1.06e- 32 -0.373  -0.239
+
+``` r
 fit_q8 %>% tidy()
 ```
 
@@ -612,8 +655,11 @@ fit_q8 %>% tidy()
 - How does controlling for found contraband affect the `subject_race`
   terms in the model?
   - When there is *not* contraband found, Hispanic subjects are still
-    the most likely to be arrested, but black subjects are less likely
-    than white subjects.
+    the most likely to be arrested, but black subjects appear to be less
+    likely than white subjects. However, when calculating a 99%
+    confidence interval for black subjects, the CI does intersect zero,
+    implying that this observation is not significant. The CI for
+    hispanic subject is still significant, however.
 - What does the *finding of contraband* tell us about the stop? What
   does it *not* tell us about the stop?
   - The finding of contraband tells us that the officer decided to
